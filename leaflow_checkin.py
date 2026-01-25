@@ -270,7 +270,7 @@ class LeaflowAutoCheckin:
             logger.warning(f"获取余额时出错: {e}")
             return "未知"
     
-    def wait_for_checkin_page_loaded(self, max_retries=3, wait_time=20):
+    def wait_for_checkin_page_loaded(self, max_retries=3, wait_time=60):
         """等待签到页面完全加载，支持重试"""
         for attempt in range(max_retries):
             logger.info(f"等待签到页面加载，尝试 {attempt + 1}/{max_retries}，等待 {wait_time} 秒...")
@@ -316,7 +316,7 @@ class LeaflowAutoCheckin:
         
         try:
             # 先等待页面可能的重载
-            time.sleep(5)
+            time.sleep(10)
             
             # 使用和单账号成功时相同的选择器
             checkin_selectors = [
@@ -373,7 +373,7 @@ class LeaflowAutoCheckin:
         self.driver.get("https://checkin.leaflow.net")
         
         # 等待签到页面加载（最多重试3次，每次等待20秒）
-        if not self.wait_for_checkin_page_loaded(max_retries=3, wait_time=20):
+        if not self.wait_for_checkin_page_loaded(max_retries=3, wait_time=60):
             raise Exception("签到页面加载失败，无法找到签到相关元素")
         
         # 查找并点击立即签到按钮
@@ -395,7 +395,7 @@ class LeaflowAutoCheckin:
         """获取签到结果消息"""
         try:
             # 给页面一些时间显示结果
-            time.sleep(3)
+            time.sleep(10)
             
             # 尝试查找各种可能的成功消息元素
             success_selectors = [
@@ -603,7 +603,7 @@ class MultiAccountManager:
                 
                 # 在账号之间添加间隔，避免请求过于频繁
                 if i < len(self.accounts):
-                    wait_time = 5
+                    wait_time = 50
                     logger.info(f"等待{wait_time}秒后处理下一个账号...")
                     time.sleep(wait_time)
                     
@@ -640,3 +640,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
